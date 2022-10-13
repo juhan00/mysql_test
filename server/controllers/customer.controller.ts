@@ -1,21 +1,28 @@
-const Customer = require("../models/customer.model.ts");
+import {
+  create,
+  getAll,
+  findById,
+  updateById,
+  remove,
+  removeAll,
+} from "../models/customer.model";
 
 //새 객체 생성
-exports.create = (req, res) => {
+const customerCreate = (req, res) => {
   if (!req.body) {
     res.status(400).send({
       message: "Content can not be empty!",
     });
   }
 
-  const customer = new Customer({
+  const customer = {
     email: req.body.email,
     name: req.body.name,
     active: req.body.active,
-  });
+  };
 
   //데이터베이스에 저장
-  Customer.create(customer, (err) => {
+  create(customer, (err) => {
     if (err) {
       res.status(500).send({
         message:
@@ -26,8 +33,8 @@ exports.create = (req, res) => {
 };
 
 //전체 조회
-exports.findAll = (res) => {
-  Customer.getAll((err, data) => {
+const customerFindAll = (res) => {
+  getAll((err, data) => {
     if (err)
       res.status(500).send({
         message:
@@ -38,8 +45,8 @@ exports.findAll = (res) => {
 };
 
 //id로 조회
-exports.findOne = (req, res) => {
-  Customer.findById(req.params.customerId, (err, data) => {
+const customerFindOne = (req, res) => {
+  findById(req.params.customerId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
@@ -55,7 +62,7 @@ exports.findOne = (req, res) => {
 };
 
 // id로 갱신
-exports.update = (req, res) => {
+const customerUpdate = (req, res) => {
   //Validate Request
   if (!req.body) {
     res.status(400).send({
@@ -63,28 +70,24 @@ exports.update = (req, res) => {
     });
   }
 
-  Customer.updateById(
-    req.params.customerId,
-    new Customer(req.body),
-    (err, data) => {
-      if (err) {
-        if (err.kind === "not_found") {
-          res.status(404).send({
-            message: `Not found Customer with id ${req.params.customerId}.`,
-          });
-        } else {
-          res.status(500).send({
-            message: "Error updating Customer with id" + req.params.customerId,
-          });
-        }
-      } else res.send(data);
-    }
-  );
+  updateById(req.params.customerId, req.body, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Customer with id ${req.params.customerId}.`,
+        });
+      } else {
+        res.status(500).send({
+          message: "Error updating Customer with id" + req.params.customerId,
+        });
+      }
+    } else res.send(data);
+  });
 };
 
 //id로 삭제
-exports.delete = (req, res) => {
-  Customer.remove(req.params.customerId, (err) => {
+const customerDelete = (req, res) => {
+  remove(req.params.customerId, (err) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
@@ -100,8 +103,8 @@ exports.delete = (req, res) => {
 };
 
 //전체 삭제
-exports.deleteAll = (req, res) => {
-  Customer.removeAll((err) => {
+const customerDeleteAll = (req, res) => {
+  removeAll((err) => {
     if (err) {
       res.status(500).send({
         message:
@@ -109,4 +112,13 @@ exports.deleteAll = (req, res) => {
       });
     } else res.send({ message: `All Customers were deleted successfully!` });
   });
+};
+
+export {
+  customerCreate,
+  customerFindAll,
+  customerFindOne,
+  customerUpdate,
+  customerDelete,
+  customerDeleteAll,
 };

@@ -1,15 +1,15 @@
-const sql = require("./db.ts");
+import sql from "./db";
 
 // 생성자
-const Customer = function (customer) {
+const Customer = (customer) => {
   const email = customer.email;
   const name = customer.name;
   const active = customer.active;
 };
 
 // customer 튜플 추가
-Customer.create = (newCustomer, result) => {
-  sql.query("INSERT INTO customers SET ?", newCustomer, (err, res) => {
+const create = (newCustomer, result) => {
+  sql.query("INSERT INTO customers SET ?", newCustomer, (err, res: any) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -22,27 +22,31 @@ Customer.create = (newCustomer, result) => {
 };
 
 //customer id로 조회
-Customer.findByID = (customerID, result) => {
-  sql.query("SELECT * FROM customers WHERE id=?", customerID, (err, res) => {
-    if (err) {
-      console.log("error:", err);
-      result(err, null);
-      return;
-    }
+const findById = (customerID, result) => {
+  sql.query(
+    "SELECT * FROM customers WHERE id=?",
+    customerID,
+    (err, res: any) => {
+      if (err) {
+        console.log("error:", err);
+        result(err, null);
+        return;
+      }
 
-    if (res.length) {
-      console.log("found customer:", res[0]);
-      result(null, res[0]);
-      return;
-    }
+      if (res.length) {
+        console.log("found customer:", res[0]);
+        result(null, res[0]);
+        return;
+      }
 
-    //결과가 없을 시
-    result({ kind: "not_found" }, null);
-  });
+      //결과가 없을 시
+      result({ kind: "not_found" }, null);
+    }
+  );
 };
 
 //customer 전체 조회
-Customer.getAll = (result) => {
+const getAll = (result) => {
   sql.query("SELECT * FROM customers", (err, res) => {
     if (err) {
       console.log("error:", err);
@@ -56,11 +60,11 @@ Customer.getAll = (result) => {
 };
 
 //customer id로 수정
-Customer.updateByID = (id, customer, result) => {
+const updateById = (id, customer, result) => {
   sql.query(
     "UPDATE customers SET email=?, name=?, active=?WHERE id=?",
     [customer.email, customer.name, customer.active, id],
-    (err, res) => {
+    (err, res: any) => {
       if (err) {
         console.log("error:", err);
         result(err, null);
@@ -80,8 +84,8 @@ Customer.updateByID = (id, customer, result) => {
 };
 
 //customer id로 삭제
-Customer.remove = (id, result) => {
-  sql.query("DELETE FROM customers WHERE id=?", id, (err, res) => {
+const remove = (id, result) => {
+  sql.query("DELETE FROM customers WHERE id=?", id, (err, res: any) => {
     if (err) {
       console.log("error:", err);
       result(err, null);
@@ -100,8 +104,8 @@ Customer.remove = (id, result) => {
 };
 
 //customer 전체 삭제
-Customer.removeAll = (result) => {
-  sql.query("DELETE FROM customers", (err, res) => {
+const removeAll = (result) => {
+  sql.query("DELETE FROM customers", (err, res: any) => {
     if (err) {
       console.log("error:", err);
       result(err, null);
@@ -118,5 +122,4 @@ Customer.removeAll = (result) => {
     result(null, res);
   });
 };
-
-module.exports = Customer;
+export { create, findById, getAll, updateById, remove, removeAll };

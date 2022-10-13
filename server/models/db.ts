@@ -1,5 +1,5 @@
-const mysql = require("mysql2");
-const dbConfig = require("../config/db.config.ts");
+import mysql from "mysql2";
+import dbConfig from "../config/db.config";
 
 console.log(dbConfig);
 //데이터베이스 connection 객체 생성
@@ -16,4 +16,4 @@ connection.connect((error) => {
   console.log("Successfully connected to the database.");
 });
 
-module.exports = connection;
+export default connection;
