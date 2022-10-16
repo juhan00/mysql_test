@@ -1,4 +1,3 @@
-import { Application } from "express";
 import {
   customerCreate,
   customerFindAll,
@@ -8,7 +7,7 @@ import {
   customerDeleteAll,
 } from "../controllers/customer.controller";
 
-const customerRoute = (app: Application) => {
+const customerRoute = (app) => {
   //튜플 생성
   app.post("/customers", customerCreate);
 

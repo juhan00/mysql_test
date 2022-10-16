@@ -1,30 +1,70 @@
 import path from "path";
 import dotenv from "dotenv";
 import { routerSetup } from "./server/routes";
-const express = require("express");
-const bodyParser = require("body-parser");
-const app = express();
+import express, { Application, Request, Response } from "express";
+import bodyParser from "body-parser";
+import next from "next";
+import exp from "constants";
 
-dotenv.config();
 const port = process.env.DATABASE_PORT;
+const dev = process.env.NODE_ENV !== "production";
+const app = next({ dev });
+const handle = app.getRequestHandler();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app
+  .prepare()
+  .then(() => {
+    const server = express();
 
-routerSetup(app);
+    server.use(bodyParser.json());
+    server.use(bodyParser.urlencoded({ extended: true }));
 
-//포트넘버 설정
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+    routerSetup(server);
 
-app.use(express.static(path.join(__dirname, "./build")));
+    server.get("/", (req, res) => {
+      return app.render(req, res, "/");
+    });
 
-app.get("/", (res) => {
-  res.json({ message: "Hello World!" });
-  res.sendFile(path.join(__dirname, "./build/index.html"));
-});
+    server.get("*", (req, res) => {
+      return handle(req, res);
+    });
 
-app.get("*", (res) => {
-  res.sendFile(path.join(__dirname, "./build/index.html"));
-});
+    server.listen(port, () => {
+      console.log(`listening to ${port}`);
+    });
+  })
+  .catch((ex) => {
+    console.log(ex.stack);
+    process.exit(1);
+  });
+
+// import path from "path";
+// import dotenv from "dotenv";
+// import { routerSetup } from "./server/routes";
+// import express, { Application, Request, Response } from "express";
+// import bodyParser from "body-parser";
+// const app: Application = express();
+
+// dotenv.config();
+// const port = process.env.DATABASE_PORT;
+
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+
+// routerSetup(app);
+
+// //포트넘버 설정
+// app.listen(port, () => {
+//   console.log(`Server is running on port ${port}`);
+// });
+
+// app.use(express.static(path.join(__dirname, "./build")));
+
+// app.get("/", (req, res) => {
+//   res.json({ message: "Hello World!" });
+//   res.sendFile(path.join(__dirname, "/public/vercel.svg"));
+// });
+
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "./build/index.html"));
+// });

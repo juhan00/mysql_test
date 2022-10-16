@@ -1,11 +1,11 @@
 import sql from "./db";
 
 // 생성자
-const Customer = (customer) => {
-  const email = customer.email;
-  const name = customer.name;
-  const active = customer.active;
-};
+// const newCustomer = (customer) => {
+//   const email = customer.email;
+//   const name = customer.name;
+//   const active = customer.active;
+// };
 
 // customer 튜플 추가
 const create = (newCustomer, result) => {

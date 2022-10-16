@@ -33,7 +33,8 @@ const customerCreate = (req, res) => {
 };
 
 //전체 조회
-const customerFindAll = (res) => {
+const customerFindAll = (req, res) => {
+  console.log("customerFindAll==========>testetest");
   getAll((err, data) => {
     if (err)
       res.status(500).send({
