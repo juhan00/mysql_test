@@ -1,12 +1,9 @@
-import path from "path";
-import dotenv from "dotenv";
-import { routerSetup } from "./server/routes";
-import express, { Application, Request, Response } from "express";
 import bodyParser from "body-parser";
+import express from "express";
 import next from "next";
-import exp from "constants";
+import { routerSetup } from "./server/routes";
 
-const port = process.env.DATABASE_PORT;
+const port = 3306;
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();

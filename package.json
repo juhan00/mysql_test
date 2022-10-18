@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon --exec node --loader ts-node/esm server.ts",
+    "dev": "nodemon --exec node --loader ts-node/esm web.js",
     "app": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "node web.js",
     "lint": "next lint"
   },
   "dependencies": {
